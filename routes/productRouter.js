@@ -8,11 +8,20 @@ const productRouter = express.Router();
 productRouter
 	.route('/books')
 	.options(cors.cors, (_, res) => res.sendStatus(200))
-	.post(cors.corsWithOptions, async (req, res) => {
-		const { title, isbn } = req.body;
+	.post(cors.cors, async (req, res) => {
+		const { title, isbn, author, description, price, pageCount, pubYear } =
+			req.body;
 		// creates new book if title and isbn are provided
 		if (title && isbn) {
-			const newBook = await new Book({ title, isbn });
+			const newBook = await new Book({
+				title,
+				isbn,
+				author,
+				description,
+				price,
+				pageCount,
+				pubYear,
+			});
 			newBook
 				.save()
 				.then((createdBook) => {
@@ -49,7 +58,8 @@ productRouter
 	})
 	.put(cors.cors, async (req, res) => {
 		const { bookId } = req.params;
-		const { title, isbn } = req.body;
+		const { title, isbn, author, description, price, pageCount, pubYear } =
+			req.body;
 		const book = await Book.findByIdAndUpdate(
 			bookId,
 			{ title: title, isbn: isbn },
